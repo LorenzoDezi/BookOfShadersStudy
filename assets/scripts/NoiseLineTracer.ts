@@ -3,10 +3,10 @@ import { _decorator, Component, Node, Graphics, CCFloat, CCInteger, lerp } from 
 import { Noises } from './Noises';
 const { ccclass, property, requireComponent, executeInEditMode } = _decorator;
  
-@ccclass('LineTracer')
+@ccclass('NoiseLineTracer')
 @requireComponent(Graphics)
 @executeInEditMode
-export class LineTracer extends Component {
+export class NoiseLineTracer extends Component {
     
     private graphics: Graphics;
 
