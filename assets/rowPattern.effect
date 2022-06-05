@@ -1,0 +1,67 @@
+// reference: https://thebookofshaders.com/10/
+
+CCEffect %{
+  techniques:
+  - name: opaque
+    passes:
+    - vert: general-vs:vert # builtin header
+      frag: unlit-fs:frag
+      properties: &props
+        mainTexture:    { value: white }
+        mainColor:      { value: [1, 1, 1, 1], editor: { type: color } }
+        randomScale: { value: 43758.5453123, editor: { type: float } }
+        randomGridScale: { value: 1, editor: { type: float } }
+        gridDir: { value: [12.9898,78.233], editor: {type: vec2 } }
+        gridSpeed: { value: [0.1,78.233], editor: {type: vec2 } }
+        time: { value: 0 }
+
+  - name: transparent
+    passes:
+    - vert: general-vs:vert # builtin header
+      frag: unlit-fs:frag
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendSrcAlpha: src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      properties: *props
+}%
+
+CCProgram unlit-fs %{
+  precision highp float;
+  #include <output>
+  #include <cc-fog-fs>
+
+  in vec2 v_uv;
+  in vec3 v_position;
+
+  uniform sampler2D mainTexture;
+
+  uniform Constant {
+    vec4 mainColor;
+    vec2 gridDir;
+    vec2 gridSpeed;
+    float randomScale;
+    float randomGridScale;
+    float time;
+  };
+
+  float random(vec2 st) {
+    return fract(sin(dot(st.xy, gridDir))*randomScale);
+  }
+
+  vec4 frag () {
+    vec2 speed = gridSpeed;
+    if(v_uv.y > 0.5) {
+      speed = -speed * 2.0;
+    }
+    vec2 timeUv = fract(v_uv + time * speed);
+    vec4 col = random(floor(timeUv * randomGridScale)) * mainColor * texture(mainTexture, v_uv);
+    if(col.x > 0.0)
+      discard;
+    CC_APPLY_FOG(col, v_position);
+    return CCFragOutput(col);
+  }
+}%
