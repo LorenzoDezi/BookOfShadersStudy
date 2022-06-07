@@ -52,6 +52,7 @@ CCProgram unlit-fs %{
     return fract(sin(dot(st.xy, gridDir))*randomScale);
   }
 
+  // https://thebookofshaders.com/11/
   float noise(vec2 st) {
     vec2 i = floor(st);
     vec2 f = fract(st);
@@ -66,7 +67,7 @@ CCProgram unlit-fs %{
     vec2 uv = f*f*(3.0-2.0*f);
 
     return mix(a, b, uv.x) + 
-      ((c-a) * uv.y) * (1.0 - uv.x) + //weight is crossed between four points
+      ((c-a) * uv.y) * (1.0 - uv.x) + //weight is mixed between four points
       ((d-b) * uv.y) * uv.x; 
 
   }

@@ -31,7 +31,8 @@
         "b": 133,
         "a": 255
       },
-      "randomGridScale": 15,
+      "randomScale": 10000,
+      "randomGridScale": 4,
       "gridDir": {
         "__type__": "cc.Vec2",
         "x": 1,
@@ -40,8 +41,9 @@
       "gridSpeed": {
         "__type__": "cc.Vec2",
         "x": 0.001,
-        "y": 0
-      }
+        "y": -0.012
+      },
+      "time": 1
     }
   ]
 }

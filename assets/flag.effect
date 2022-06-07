@@ -1,0 +1,86 @@
+// reference: https://thebookofshaders.com/11/
+
+CCEffect %{
+  techniques:
+  - name: opaque
+    passes:
+    - vert: general-vs:vert # builtin header
+      frag: unlit-fs:frag
+      properties: &props
+        time: { value: 0 }
+        stripes: { { value: 1, editor: { type: float } } }
+        stripeSize: { { value: 0.5, editor: { type: float } } }
+        randomScale: { value: 43758.5453123, editor: { type: float } }
+
+  - name: transparent
+    passes:
+    - vert: general-vs:vert # builtin header
+      frag: unlit-fs:frag
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendSrcAlpha: src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      properties: *props
+}%
+
+CCProgram unlit-fs %{
+  precision highp float;
+  #include <output>
+  #include <cc-fog-fs>
+
+  in vec2 v_uv;
+  in vec3 v_position;
+
+  vec3 orangish = vec3(1.000,0.833,0.224);
+  vec3 bluish = vec3(0.149,0.141,0.912);
+
+
+  uniform Constant {
+    float time;
+    float stripes;
+    float stripeSize;
+    float randomScale;
+  };
+
+  float random(float x) {
+    return fract(sin(x * randomScale)*randomScale);
+  }
+
+  vec3 rgb2hsb( vec3 c ){
+      vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+      vec4 p = mix(vec4(c.bg, K.wz),
+                  vec4(c.gb, K.xy),
+                  step(c.b, c.g));
+      vec4 q = mix(vec4(p.xyw, c.r),
+                  vec4(c.r, p.yzx),
+                  step(p.x, c.r));
+      float d = q.x - min(q.w, q.y);
+      float e = 1.0e-10;
+      return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)),
+                  d / (q.x + e),
+                  q.x);
+  }
+
+  //  Function from Iñigo Quiles
+  //  https://www.shadertoy.com/view/MsS3Wc
+  vec3 hsb2rgb( vec3 c ){
+      vec3 rgb = clamp(abs(mod(c.x*6.0+vec3(0.0,4.0,2.0),
+                              6.0)-3.0)-1.0,
+                      0.0,
+                      1.0 );
+      rgb = rgb*rgb*(3.0-2.0*rgb);
+      return c.z * mix(vec3(1.0), rgb, c.y);
+  }
+
+  vec4 frag () {
+    //vec4 col = vec4(0.0);
+    float i = floor(v_uv.y * stripes);
+    //col = vec4(random(i), random(i+1.), random(i+2.), 1.0); (random color flag)
+    vec4 col = vec4(hsb2rgb(vec3(i/stripes, 1.0, 1.0)), 1.0); // hsb hue follow flag
+    CC_APPLY_FOG(col, v_position);
+    return CCFragOutput(col);
+  }
+}%

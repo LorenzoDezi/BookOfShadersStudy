@@ -31,6 +31,9 @@
       },
       {
         "__id__": 17
+      },
+      {
+        "__id__": 27
       }
     ],
     "_active": true,
@@ -38,7 +41,7 @@
     "_prefab": null,
     "autoReleaseAssets": false,
     "_globals": {
-      "__id__": 27
+      "__id__": 30
     },
     "_id": "370815e4-bff3-462a-99a0-fa90a1806d55"
   },
@@ -811,21 +814,108 @@
     "_id": "b200h2TtZDt6v8PDN56Fnp"
   },
   {
-    "__type__": "cc.SceneGlobals",
-    "ambient": {
-      "__id__": 28
+    "__type__": "cc.Node",
+    "_name": "Flag",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 1
     },
-    "shadows": {
+    "_children": [],
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 28
+      }
+    ],
+    "_prefab": null,
+    "_lpos": {
+      "__type__": "cc.Vec3",
+      "x": -4.825,
+      "y": 0,
+      "z": 0
+    },
+    "_lrot": {
+      "__type__": "cc.Quat",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 1
+    },
+    "_lscale": {
+      "__type__": "cc.Vec3",
+      "x": 0.525,
+      "y": 0.525,
+      "z": 0.525
+    },
+    "_layer": 1073741824,
+    "_euler": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_id": "15AxaizvlMA7t3rvfusRUW"
+  },
+  {
+    "__type__": "cc.MeshRenderer",
+    "_name": "Plane<ModelComponent>",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 27
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_materials": [
+      {
+        "__uuid__": "0e4c6ec3-c8ff-46fd-ae0e-861e10ca427f",
+        "__expectedType__": "cc.Material"
+      }
+    ],
+    "_visFlags": 0,
+    "lightmapSettings": {
       "__id__": 29
     },
-    "_skybox": {
-      "__id__": 30
+    "_mesh": {
+      "__uuid__": "1263d74c-8167-4928-91a6-4e2672411f47@2e76e",
+      "__expectedType__": "cc.Mesh"
     },
-    "fog": {
+    "_shadowCastingMode": 0,
+    "_shadowReceivingMode": 1,
+    "_enableMorph": true,
+    "_id": "03Yg/zBuBBSLWznjXQHOSI"
+  },
+  {
+    "__type__": "cc.ModelLightmapSettings",
+    "texture": null,
+    "uvParam": {
+      "__type__": "cc.Vec4",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 0
+    },
+    "_bakeable": false,
+    "_castShadow": false,
+    "_receiveShadow": false,
+    "_recieveShadow": false,
+    "_lightmapSize": 64
+  },
+  {
+    "__type__": "cc.SceneGlobals",
+    "ambient": {
       "__id__": 31
     },
-    "octree": {
+    "shadows": {
       "__id__": 32
+    },
+    "_skybox": {
+      "__id__": 33
+    },
+    "fog": {
+      "__id__": 34
+    },
+    "octree": {
+      "__id__": 35
     }
   },
   {
