@@ -1,0 +1,69 @@
+// reference: https://thebookofshaders.com/10/
+
+CCEffect %{
+  techniques:
+  - name: opaque
+    passes:
+    - vert: general-vs:vert # builtin header
+      frag: unlit-fs:frag
+      properties: &props
+        mainTexture:    { value: white }
+        mainColor:      { value: [1, 1, 1, 1], editor: { type: color } }
+        radius: { value: 250.0 }
+        animationSpeed: { value: 1.0 }
+        time: { value: 0.0 }
+
+  - name: transparent
+    passes:
+    - vert: general-vs:vert # builtin header
+      frag: unlit-fs:frag
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendSrcAlpha: src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      properties: *props
+}%
+
+CCProgram unlit-fs %{
+  precision highp float;
+  #include <output>
+  #include <cc-fog-fs>
+
+  in vec2 v_uv;
+  in vec3 v_position;
+
+  uniform sampler2D mainTexture;
+
+  uniform Constant {
+    vec4 mainColor;
+    float time;
+    float radius;
+    float animationSpeed;
+  };
+
+  float random(vec2 st) {
+    return fract(sin(dot(st.xy, gridDir))*randomScale);
+  }
+
+  float circle(vec2 _st, float _radius){
+    vec2 dist = _st-vec2(0.5);
+    //the dot product is used because is basically
+    //the square distance. This avoids the overhead
+    //of the sqrt function
+	  return 1.-smoothstep(_radius-(_radius*0.01),
+                         _radius+(_radius*0.01),
+                         dot(dist,dist)*5.0);
+  }
+
+  vec4 frag () {
+    float curr_radius = radius + (sin(time * animationSpeed)) * radius * 0.2;
+    float color = circle(v_uv, curr_radius);
+    vec4 col = vec4(mainColor.r * color, mainColor.g * color, 
+      mainColor.b * color, 1.0);
+    CC_APPLY_FOG(col, v_position);
+    return CCFragOutput(col);
+  }
+}%
